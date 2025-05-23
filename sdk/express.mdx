@@ -1,0 +1,127 @@
+---
+title: "Express"
+description: "`@runonatlas/express` is our Express.js library for Atlas, which provides all the middleware and backend resources you need."
+---
+
+## Installation
+
+<Tabs>
+  <Tab title="npm">
+  ```bash
+  npm install @runonatlas/express
+  ```
+  </Tab>
+  <Tab title="pnpm">
+  ```bash
+  pnpm add @runonatlas/express
+  ```
+  </Tab>
+  <Tab title="yarn">
+  ```bash
+  yarn add @runonatlas/express
+  ```
+  </Tab>
+</Tabs>
+
+## Initialization
+
+<Warning>
+This only covers the backend initialization with Express. You will also need to initialize your frontend. For example, [React](/sdk/react) or [Next.js](/sdk/next).
+</Warning>
+
+Initializing the Atlas SDK is very easy. You just need to follow these steps:
+
+<Steps>
+
+<Step title="Set the Atlas API key in the environment variables">
+
+You can get it from the [Atlas Dashboard](https://app.runonatlas.com).
+
+```bash .env
+ATLAS_API_KEY="INSERT_YOUR_ATLAS_API_KEY"
+```
+
+</Step>
+
+<Step title="Create the Atlas Express Client">
+
+To initialize the Atlas SDK, you need to instantiate the Atlas Client with the following parameters:
+
+1. Your Atlas API key.
+2. A function that returns the user id given a request object.
+
+<Tabs>
+  <Tab title="Using Clerk">
+    When using Clerk, you just need to pass the getAuth function to get the userId.
+
+    <CodeGroup>
+
+    ```typescript src/atlas/server.ts [expandable]
+    import { AtlasExpressClient } from "@runonatlas/express";
+    import { getAuth } from "@clerk/express";
+    import express from "express";
+
+    const app = express();
+    const atlas = new AtlasExpressClient(
+      process.env.ATLAS_API_KEY,
+      (req) => getAuth(req).userId
+    );
+
+    app.use("/", atlas.router);
+    ```
+
+    </CodeGroup>
+
+  </Tab>
+  <Tab title="Using any authentication provider">
+    You just need to pass a function that returns the userId from the request.
+
+    <CodeGroup>
+
+    ```typescript src/atlas/server.ts [expandable]
+    import { AtlasExpressClient } from "@runonatlas/express";
+    import express from "express";
+    import { getUserIdFromRequest } from "your-auth-provider";
+
+    const app = express();
+    const atlas = new AtlasExpressClient(
+      process.env.ATLAS_API_KEY,
+      (req) => getUserIdFromRequest(req)
+    );
+
+    app.use("/", atlas.router);
+    ```
+
+    </CodeGroup>
+
+  </Tab>
+</Tabs>
+
+
+</Step>
+
+</Steps>
+
+## Limit user access based on their subscriptions
+
+You can prevent users from accessing restricted parts of your application based on their subscription. To do so, you can use our middleware protection features.
+
+### Backend Protection
+
+In order to prevent users from using certain endpoints unless they have a plan with the required features, we only need to add a middleware.
+
+```typescript
+app.post(
+  "/api/generate-caption",
+  atlas.createFeaturesMiddleware(["data-explorer"]), // Add this line
+  (req, res) => {
+    // Your endpoint logic here
+  }
+);
+```
+
+This will automatically prevent users who don't have the data-explorer feature in their active plan from accessing the endpoint.
+
+<Warning>
+  Remember that you need to have followed the [installation guide](#installation) before you can use any of these features.
+</Warning> 

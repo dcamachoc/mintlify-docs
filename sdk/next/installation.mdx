@@ -3,7 +3,7 @@ title: "Next.js"
 description: "@runonatlas/next is our Next.js library for Atlas, which provides all the components, hooks and backend resources you need."
 ---
 
-### Installation
+## Installation
 
 <Tabs>
   <Tab title="npm">
@@ -25,7 +25,9 @@ description: "@runonatlas/next is our Next.js library for Atlas, which provides 
 npm install @runonatlas/next
 ```
 
-### Initialization
+## Initialization
+
+### Frontend
 
 To initialize the application, you need to create a client provider component and wrap your application with it. Since Atlas needs to authenticate with your backend and verify that users are only accessing what they can, you will need to place it under your authentication provider.
 
@@ -135,3 +137,63 @@ To initialize the application, you need to create a client provider component an
     );
   ```
 </Accordion>
+
+### Backend
+
+You will need to initialize the client in the backend using:
+
+- the Atlas API key
+- a callback that returns the user that performed the request. This callback will depend on the authentication provider you are using. 
+
+<CodeGroup>
+
+```bash .env
+ATLAS_API_KEY="INSERT_YOUR_ATLAS_API_KEY"
+```
+
+
+```typescript src/atlas/server.ts (Clerk example) [expandable]
+import { AtlasNextServerClient } from "@runonatlas/private-next/server";
+import { auth } from "@clerk/nextjs/server";
+
+export const atlasServerClient = new AtlasNextServerClient(
+  process.env.ATLAS_API_KEY!,
+  async () => {
+    const { userId } = await auth();
+
+    return userId;
+  }
+);
+```
+
+
+```typescript src/app/api/atlas-api/[slug]/route.ts [expandable]
+import { atlasServerClient } from "@/atlas/server";
+import { NextRequest } from "next/server";
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await params;
+
+  return (
+    atlasServerClient.router[slug]?.GET?.(request) ??
+    new Response("Not found", { status: 404 })
+  );
+}
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await params;
+
+  return (
+    atlasServerClient.router[slug]?.POST?.(request) ??
+    new Response("Not found", { status: 404 })
+  );
+}
+```
+
+</CodeGroup>

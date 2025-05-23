@@ -56,7 +56,7 @@ To initialize the Atlas SDK, you need to instantiate the Atlas Client with the f
 
     <CodeGroup>
 
-    ```typescript src/atlas/server.ts [expandable]
+    ```typescript src/atlas/server.ts [expandable] {6-11}
     import { AtlasExpressClient } from "@runonatlas/express";
     import { getAuth } from "@clerk/express";
     import express from "express";
@@ -78,7 +78,7 @@ To initialize the Atlas SDK, you need to instantiate the Atlas Client with the f
 
     <CodeGroup>
 
-    ```typescript src/atlas/server.ts [expandable]
+    ```typescript src/atlas/server.ts [expandable] {6-11}
     import { AtlasExpressClient } from "@runonatlas/express";
     import express from "express";
     import { getUserIdFromRequest } from "your-auth-provider";
@@ -104,13 +104,13 @@ To initialize the Atlas SDK, you need to instantiate the Atlas Client with the f
 
 ## Limit user access based on their subscriptions
 
-You can prevent users from accessing restricted parts of your application based on their subscription. To do so, you can use our middleware protection features.
+You can prevent users from accessing restricted parts of your application based on their subscription. To do so, you can use our backend protection features.
 
 ### Backend Protection
 
 In order to prevent users from using certain endpoints unless they have a plan with the required features, we only need to add a middleware.
 
-```typescript
+```typescript {3}
 app.post(
   "/api/generate-caption",
   atlas.createFeaturesMiddleware(["data-explorer"]), // Add this line

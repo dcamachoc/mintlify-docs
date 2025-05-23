@@ -1,0 +1,128 @@
+---
+title: "JavaScript"
+description: "`@runonatlas/core` is our JavaScript/TypeScript library for Atlas, which provides the base client for direct integration with Atlas services."
+---
+
+<Warning>
+  This guide is for direct JavaScript/TypeScript integration. If you're using one of our supported frameworks, we recommend using their dedicated SDKs instead:
+  
+  - [Next.js SDK](/sdk/next) - For Next.js applications
+  - [React SDK](/sdk/react) - For React applications
+  - [Express SDK](/sdk/express) - For Express.js applications
+  
+  These framework-specific SDKs provide better integration and additional features tailored to each framework.
+</Warning>
+
+## Installation
+
+<Tabs>
+  <Tab title="npm">
+  ```bash
+  npm install @runonatlas/core
+  ```
+  </Tab>
+  <Tab title="pnpm">
+  ```bash
+  pnpm add @runonatlas/core
+  ```
+  </Tab>
+  <Tab title="yarn">
+  ```bash
+  yarn add @runonatlas/core
+  ```
+  </Tab>
+</Tabs>
+
+## Initialization
+
+<Steps>
+<Step title="Set the Atlas API key in the environment variables">
+
+You can get it from the [Atlas Dashboard](https://app.runonatlas.com).
+
+```bash .env
+ATLAS_API_KEY="INSERT_YOUR_ATLAS_API_KEY"
+```
+
+</Step>
+
+<Step title="Create the Atlas Client">
+
+To initialize the Atlas SDK, you need to instantiate the Atlas Client with your API key:
+
+```typescript src/atlas/client.ts [expandable]
+import { AtlasClient } from "@runonatlas/core";
+
+const atlas = new AtlasClient(process.env.ATLAS_API_KEY!);
+```
+
+
+</Step>
+</Steps>
+
+## Core Features
+
+The Atlas JavaScript client provides several methods to interact with Atlas services:
+
+### Feature Management
+
+#### Register Features
+
+Register features that your application uses:
+
+```typescript
+// Register a single feature
+await atlas.registerFeatureIfNotExists("data-explorer");
+
+// Register multiple features
+await atlas.registerFeaturesIfNotExist(["data-explorer", "ai-assistant"]);
+```
+
+The feature registration is used to ensure that the feature is registered in Atlas. If the feature is not registered, it will be registered automatically and an alert will be sent to the administrators.
+
+#### Check Feature Access
+
+Check if a customer has access to specific features:
+
+```typescript
+const { ok, features } = await atlas.areFeaturesAllowed("customer-123", [
+  "data-explorer",
+  "ai-assistant",
+]);
+
+if (ok) {
+  // Customer has access to all required features
+} else {
+  // Check individual feature access
+  console.log(features); // { "data-explorer": true, "ai-assistant": false }
+}
+```
+
+### Customer Management
+
+#### Get Customer Features
+
+Retrieve all features a customer has access to:
+
+```typescript
+const features = await atlas.getCustomerFeatures("customer-123");
+console.log(features); // ["data-explorer", "basic-features"]
+```
+
+#### Get Customer Details
+
+Get detailed information about a customer:
+
+```typescript
+const customer = await atlas.getCustomerDetails("customer-123");
+console.log(customer); // { id: "customer-123", name: "John Doe", ... }
+```
+
+### Pricing Model
+
+Get information about your pricing model:
+
+```typescript
+const pricingModel = await atlas.getPricingModel();
+console.log(pricingModel); // { plans: [...], features: [...] }
+```

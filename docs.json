@@ -35,21 +35,16 @@
         ]
       },
       {
-        "tab": "API Reference",
+        "tab": "Development Portal",
         "groups": [
           {
-            "group": "API Documentation",
+            "group": "SDK Documentation",
             "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint Examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "sdk/next",
+              "sdk/react",
+              "sdk/express",
+              "sdk/other-javascript-based-frameworks",
+              "sdk/others"
             ]
           }
         ]

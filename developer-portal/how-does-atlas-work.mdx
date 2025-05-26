@@ -1,0 +1,82 @@
+---
+title: "How does Atlas work?"
+description: "Understand how to use Atlas to manage your billing and packaging."
+---
+
+## What problem does Atlas solve?
+
+When you are building a SaaS application, one of the key problems you need to solve is how to manage your billing and packaging.
+Not only you need to decide the right strategy, you also need to implement it in a way that allows you to scale and adapt to your
+users' needs. You will not create the correct pricing and packaging strategy in your first iteration. Many pricing and packaging
+experts would actually say that you will never stop iterating over it.
+
+As a developer, this is a challenge. We need to somehow charge our clients and keep all the systems in sync.
+But, how do we create a system that allows us to manage our billing and packaging in a way that enables us to iterate as much as we need?
+How can we easily migrate from a flat features model to one that is more complex and usage-based? 
+
+Atlas solves this problem.
+
+## How does Atlas solve it?
+
+### Payment integrations
+
+There are multiple solutions that you can use to charge your customers. However, all these providers offer a lot of complexity.
+And it's not their fault, they serve an extremely big variety of customers, and each one of them needs something slightly different.
+
+So, what do we do? We integrate on top of them and make your journey painless. Right now, we integrate with Stripe and we offer a
+simple way to charge your customers. You don't need to worry about webhooks, payment processing failing later, or syncyng everything.
+
+Our system works as a single source of truth. Just using our PricingTable component in the frontend and our clients in the backend,
+the immediate and recurrent payments are automatically handled and in sync in all your systems. 
+
+### Single Source of truth
+
+We have many widgets and utilities that will help you to manage your billing and packaging. However, if there is some case that we
+don't cover or you need the pricing and packaging information for a specific use case, you can use our API to get the information.
+
+We have a single source of truth for all your pricing and packaging information and you can use it to get the information for any
+use case.
+
+### Authentication
+
+We are not reinventing the wheel. We use your authentication system to verify the requests: you can use any authentication system you want
+and just tell us how to use it.
+
+### Features at the core
+
+Everything comes down to a single concept: features. Features are what you are selling to your users. They are the functionalities
+that your users can access. Everything in your company relates to that. What are the best features? How do we offer them? How do we
+price them? How do we limit them?
+
+Atlas recognizes the importance of features and puts them at the center. It's simple: every time you develop a new feature, you
+only need to register it. Atlas and the product team will take care of the rest.
+
+How do we do this? For example, let's say that you have a bunch of endpoints in your application that are related to the "data exploration"
+feature. Using Atlas, you simply need to register the feature in the endpoint and forget about it.
+
+How is this done? For example, in Express.js, you can do the following:
+
+```typescript {3}
+app.get(
+  "/data-exploration",
+  atlasExpress.createFeaturesMiddleware(["data-explorer"]),
+  (req, res) => {
+    res.send("Hello, world!");
+  }
+);
+```
+
+If your product team wants to change who can access this feature, engineers don't care. Atlas will automatically start rejecting
+(or accepting) access to users who don't have the feature enabled. Simple. 
+
+### Performant
+
+All our libraries have robust caching mechanisms that will make your application performant. We also have caching invalidation 
+mechanisms that will make sure that your application is always up to date and in sync, even if you have horizontally scaled your application.
+
+
+
+### Easy to use
+
+All our libraries are designed to be easy to use. We have a lot of documentation and examples that will help you to get started.
+Is something confusing? Reach out on our [Discord](https://discord.gg/runonatlas) and we will help you out.

@@ -34,9 +34,18 @@
         "tab": "Development Portal",
         "groups": [
           {
+            "group": "Welcome!",
+            "pages": ["developer-portal/how-does-atlas-work"]
+          },
+          {
             "group": "SDK Documentation",
             "root": "sdk/next",
-            "pages": ["sdk/next", "sdk/react", "sdk/express", "sdk/javascript"]
+            "pages": [
+              "developer-portal/sdk/next",
+              "developer-portal/sdk/react",
+              "developer-portal/sdk/express",
+              "developer-portal/sdk/javascript"
+            ]
           }
         ]
       }
